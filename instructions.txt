@@ -1,0 +1,137 @@
+Task Instructions For Fullstack Team (Ehsan, Pawan) 
+Main Objective 
+ Rewrite and enhance the website based on the mock-coded website GitHub 
+repo: https://github.com/CosmoGenisis/zordie 
+ Two GitHub repositories will be provided:  
+o A mock website repository (for reference): 
+https://github.com/CosmoGenisis/zordie 
+o The oAicial company repository (for final code submission) 
+ Refer to and reuse code structure/components from the mock repository as 
+needed 
+ Push your final clean code to the oAicial company repository 
+Frontend Development 
+Tech Stack: 
+ React.js with TypeScript 
+ TailwindCSS for styling 
+ Radix UI / Shadcn UI for components 
+ Three.js for subtle 3D eAects (backgrounds, motion) 
+Pages to Rebuild: 
+ Home 
+ Features 
+ Pricing 
+ For Companies 
+ For Job Seekers 
+ About Us 
+ Contact Us 
+ Careers 
+ Blog 
+ Post a Job 
+ AI Screening 
+ Verification 
+ Enterprise Solutions 
+ Find Jobs 
+ Verify Profile 
+ Practice Interviews 
+ Resources 
+ Privacy Policy 
+ Terms of Service 
+ Login 
+ Sign Up 
+ Admin Dashboard (Job Posting, Candidate List) 
+Backend Development (Basic CRUD & Authentication) 
+Tech Stack: 
+ FastAPI backend 
+ PostgreSQL database 
+Requirements: 
+ Create basic CRUD APIs for:  
+o Users (Register/Login) 
+o Jobs (Post, Edit, Delete) 
+o Candidates (View, Add, Delete) 
+ Authentication:  
+o Use Clerk or NextAuth.js with JWT for user authentication 
+Integration 
+ Connect frontend forms to backend APIs 
+ Handle loading, error, and success states properly 
+ Ensure smooth API communication across frontend and backend 
+Repository Workflow 
+1. Clone the mock website GitHub repo 
+(https://github.com/CosmoGenisis/zordie) for reference 
+2. Enhance and rebuild the frontend: Clean, modular, improved UI/UX 
+3. Clone the oAicial company GitHub repo 
+4. Push your rewritten, enhanced, clean code to the oAicial repo 
+5. Commit daily with clear commit messages (e.g., feat: Home page 
+enhancement, build: connect login API) 
+Enhancement Features 
+ Three.js: Background eAects like particles and subtle 3D animations 
+ Framer Motion: Animations for transitions and hover eAects 
+ Improvement Focus: Responsiveness, spacing, layouts, and interactivity 
+ Ensure full TypeScript typing across components, props, API responses, etc. 
+Timeline (This Week) 
+Day 
+Target 
+Day 1-2 Project setup + Landing Page + Header/Footer 
+Day 3 Features + Pricing + Three.js background eAects 
+Day 4 Company/Job Seeker Pages + Login/Signup 
+Day 5 About, Careers, Blog, Contact, Resources, etc. 
+Day 6 Admin Dashboard Pages + Backend API Connection 
+Day 7 Final testing, bug fixing, polish animations 
+Important Reminders 
+  
+  
+  
+  
+  
+You can reuse the structure/code from the mock repo, but final version 
+must be premium and smooth 
+Push work daily to the oAicial GitHub repo 
+Code must be modular, clean, and professional 
+Backend: Focus more on frontend, the backend is basic CRUD and 
+authentication 
+Ensure Three.js eAects are lightweight and optimized 
+Final Responsibilities 
+Responsibility 
+Clone Mock Repo 
+Details 
+Use https://github.com/CosmoGenisis/zordie as a reference 
+to speed up 
+Rebuild + Enhance 
+Frontend 
+Add Animations 
+React.js + TypeScript + TailwindCSS + Radix/Shadcn UI 
+Three.js + Framer Motion 
+Basic Backend Setup FastAPI + PostgreSQL CRUD + Authentication 
+Push to Company Repo Daily commits with clean code 
+Next Steps 
+1. Clone the mock repo (https://github.com/CosmoGenisis/zordie) → Start 
+enhancing and rebuilding → Commit daily to the oAicial repo → Final testing 
+Recommended Folder Structure 
+zordie-ai/ 
+├── frontend/ 
+│   ├── public/ 
+│   ├── src/ 
+│   │   ├── components/ 
+│   │   │   ├── common/ 
+│   │   │   ├── layout/ 
+│   │   │   └── pages/ 
+│   │   ├── hooks/ 
+│   │   ├── pages/ 
+│   │   ├── styles/ 
+│   │   ├── types/ 
+│   │   ├── utils/ 
+│   │   ├── App.tsx 
+│   │   └── main.tsx 
+│   ├── package.json 
+│   └── tsconfig.json 
+│ 
+└── backend/ 
+    ├── app/ 
+    │   ├── api/ 
+    │   ├── models/ 
+    │   ├── schemas/ 
+    │   ├── utils/ 
+    │   └── main.py 
+    ├── requirements.txt 
+    └── README.md 
+ 
+Note: All tasks must be completed by the end of this week. For Further tech stack 
+details refer to SRS document. 

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime, Float, JSON
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.db.session import Base
@@ -48,8 +48,15 @@ class Candidate(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     email = Column(String, index=True)
+    phone = Column(String, nullable=True)
     resume_url = Column(String, nullable=True)
     job_id = Column(Integer, ForeignKey("jobs.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Skills as JSON array
+    skills = Column(JSON, default=list)  # Will store: [{"name": str, "yearsExperience": float, "context": str, "confidence": float}]
+    
+    # GitHub links as JSON array
+    github_links = Column(JSON, default=list)  # Will store: [{"url": str, "username": str, "repositoryCount": int, "profileCreatedAt": str, "extractedFrom": str}]
 
     job = relationship("Job", back_populates="candidates")

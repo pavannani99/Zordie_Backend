@@ -1,15 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import api_router
-from app.db.session import engine, Base
+from app.db.session import engine
+from app.models.models import Base
 
-# Create tables
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Zordie API",
     description="Backend API for Zordie platform",
-    version="0.1.0"
+    version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 # Configure CORS
@@ -21,10 +25,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router)
+# Include API routes
+app.include_router(api_router, prefix="/api")
 
 @app.get("/")
-async def root():
+def root():
     return {"message": "Welcome to Zordie API"}
 
 if __name__ == "__main__":

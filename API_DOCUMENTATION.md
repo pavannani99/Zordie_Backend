@@ -1,8 +1,31 @@
 # Zordie API Documentation
 
-## Base URL
+## Base URLs
 ```
-http://127.0.0.1:8000/api
+Development: http://127.0.0.1:8000/api
+Production: https://api.zordie.com/api
+```
+
+## Docker Configuration
+The API is containerized using Docker. Key environment variables for Docker deployment:
+```
+DATABASE_URL=postgresql://user:password@db:5432/dbname
+ACCESS_TOKEN_SECRET_KEY=your_secret_key
+REFRESH_TOKEN_SECRET_KEY=your_refresh_secret_key
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
+REDIS_URL=redis://redis:6379
+```
+
+## CORS Configuration
+The API supports CORS with the following configuration:
+```
+Allowed Origins: 
+- http://localhost:3000 (Development)
+- https://zordie.com (Production)
+
+Allowed Methods: GET, POST, PUT, DELETE, OPTIONS
+Allowed Headers: Content-Type, Authorization
 ```
 
 ## Authentication
@@ -167,6 +190,12 @@ Response:
 ```http
 GET /jobs/
 Authorization: Bearer <access_token>
+Query Parameters:
+- page: int (default: 1)
+- limit: int (default: 10)
+- search: string (optional)
+- sort_by: string (optional, e.g., "created_at", "title")
+- sort_order: string (optional, "asc" or "desc")
 ```
 Response:
 ```json
@@ -183,7 +212,10 @@ Response:
             "created_at": "2024-05-08T03:54:54"
         }
     ],
-    "total": 1
+    "total": 1,
+    "page": 1,
+    "limit": 10,
+    "total_pages": 1
 }
 ```
 
@@ -261,6 +293,13 @@ Response: Created candidate object
 ```http
 GET /candidates/
 Authorization: Bearer <access_token>
+Query Parameters:
+- page: int (default: 1)
+- limit: int (default: 10)
+- search: string (optional)
+- job_id: int (optional)
+- sort_by: string (optional)
+- sort_order: string (optional)
 ```
 Response:
 ```json
@@ -278,7 +317,10 @@ Response:
             "created_at": "2024-05-08T03:54:54"
         }
     ],
-    "total": 1
+    "total": 1,
+    "page": 1,
+    "limit": 10,
+    "total_pages": 1
 }
 ```
 
@@ -357,6 +399,8 @@ Response:
 - Files are automatically deleted after 30 days
 
 ## Development Setup
+
+### Local Development
 1. Install dependencies:
 ```bash
 pip install -r requirements.txt
@@ -376,6 +420,40 @@ REFRESH_TOKEN_EXPIRE_DAYS=7
 python -m uvicorn app.main:app --reload
 ```
 
-4. Access the API documentation:
+### Docker Development
+1. Build the Docker image:
+```bash
+docker build -t zordie-api .
+```
+
+2. Run the container:
+```bash
+docker run -p 8000:8000 --env-file .env zordie-api
+```
+
+3. Access the API documentation:
 - Swagger UI: http://127.0.0.1:8000/docs
-- ReDoc: http://127.0.0.1:8000/redoc 
+- ReDoc: http://127.0.0.1:8000/redoc
+
+## Frontend Integration Guide
+
+### Authentication Flow
+1. Register/Login to get access and refresh tokens
+2. Store tokens securely (e.g., in HttpOnly cookies)
+3. Include access token in all API requests
+4. Use refresh token to get new access token when expired
+
+### Error Handling
+- Implement proper error handling for all API responses
+- Handle rate limiting errors with appropriate user feedback
+- Implement retry logic for failed requests
+
+### File Upload
+- Implement proper file validation before upload
+- Show upload progress using the parsing status endpoint
+- Handle upload errors gracefully
+
+### Pagination
+- Implement pagination controls using the page and limit parameters
+- Handle empty results and edge cases
+- Implement proper loading states 

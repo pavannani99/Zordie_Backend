@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <style>
+        .result-card {
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Resume Analysis Dashboard</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="analysisForm">
+                    <div class="mb-3">
+                        <label for="resume" class="form-label">Upload Resume (PDF/DOCX)</label>
+                        <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.docx" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="jobDescription" class="form-label">Job Description</label>
+                        <textarea class="form-control" id="jobDescription" name="job_description" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Analyze Resume</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="loading text-center mt-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Analyzing resume...</p>
+        </div>
+
+        <div class="result-card card">
+            <div class="card-body">
+                <h3>Analysis Results</h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Overall Score</h5>
+                                <div class="progress">
+                                    <div id="overallScore" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Skills Match</h5>
+                                <div id="skillsMatch"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Experience Match</h5>
+                                <div id="experienceMatch"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Education Match</h5>
+                                <div id="educationMatch"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Recommendations</h5>
+                                <ul id="recommendations"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Show loading
+            document.querySelector('.loading').style.display = 'block';
+            document.querySelector('.result-card').style.display = 'none';
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+                
+                const result = await response.json();
+                
+                // Update UI with results
+                document.getElementById('overallScore').style.width = `${result.overall_score}%`;
+                document.getElementById('overallScore').textContent = `${result.overall_score}%`;
+                
+                // Update skills match
+                const skillsMatch = document.getElementById('skillsMatch');
+                skillsMatch.innerHTML = Object.entries(result.skills_match)
+                    .map(([skill, score]) => `
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>${skill}</span>
+                                <span>${score}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: ${score}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+                
+                // Update experience match
+                const experienceMatch = document.getElementById('experienceMatch');
+                experienceMatch.innerHTML = Object.entries(result.experience_match)
+                    .map(([exp, score]) => `
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>${exp}</span>
+                                <span>${score}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: ${score}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+                
+                // Update education match
+                const educationMatch = document.getElementById('educationMatch');
+                educationMatch.innerHTML = Object.entries(result.education_match)
+                    .map(([edu, score]) => `
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>${edu}</span>
+                                <span>${score}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: ${score}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+                
+                // Update recommendations
+                const recommendations = document.getElementById('recommendations');
+                recommendations.innerHTML = result.recommendations
+                    .map(rec => `<li>${rec}</li>`)
+                    .join('');
+                
+                // Show results
+                document.querySelector('.loading').style.display = 'none';
+                document.querySelector('.result-card').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to analyze resume. Please try again.');
+                document.querySelector('.loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 
